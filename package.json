@@ -11,17 +11,14 @@
     "dev": "node server.js"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "latest",
+    "@whiskeysockets/baileys": "7.0.0-rc14",
     "axios": "latest",
     "cors": "latest",
     "dotenv": "latest",
-    "express": "latest",
+    "express": "5.2.1",
     "firebase-admin": "latest",
-    "mongoose": "latest",
+    "mongoose": "9.10.3",
     "pino": "latest",
     "qrcode": "latest"
-  }
-}
-"
   }
 }
