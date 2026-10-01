@@ -21,10 +21,10 @@ const mongoose = require('mongoose');
 
 // Hardcoded Default Configurations (No .env file required!)
 const PORT = process.env.PORT || 5000;
-const API_BASE = 'https://chama-movie-api.koyeb.app';
-const API_KEY = 'chama_api_c82b12fffda71170b553f662d39426ec';
-const FIREBASE_DATABASE_URL = 'https://wa-sendr-bot-default-rtdb.firebaseio.com';
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://ccransika_db_user:Pc1u7xrzGEn4LJvw@cluster0.sntej6n.mongodb.net/chama_wa_bot?retryWrites=true&w=majority";
+const API_BASE = 'https://api.chamindu.site';
+const API_KEY = 'chama_api_9fec7898a703d2a4ca36aa6d87e62f87';
+const FIREBASE_DATABASE_URL = 'https://website-be4c2-default-rtdb.europe-west1.firebasedatabase.app/';
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://Movie_Bot:tZGqdSzN6JaOt5ez@moviebot.bfksyk1.mongodb.net/";
 
 app.use(cors());
 app.use(express.json());
