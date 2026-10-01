@@ -1,0 +1,21 @@
+{
+  "name": "Chama WhatsApp Bot Server",
+  "description": "Baileys WhatsApp Bot Worker Server with Firebase Realtime Database Queue Processor",
+  "repository": "https://github.com/chamanemax02/sinhafgdhsh-multgti",
+  "logo": "https://chama-movie-api.koyeb.app/assets/chama_logo-K0qFVJ-7.png",
+  "keywords": ["whatsapp-bot", "baileys", "firebase", "movie-sender"],
+  "env": {
+    "SCRAPER_API_URL": {
+      "description": "Base URL of Chama Movie Scraper API",
+      "value": "https://chama-movie-api.koyeb.app"
+    },
+    "API_KEY": {
+      "description": "API Key for Chama Movie API",
+      "value": "chama_api_c82b12fffda71170b553f662d39426ec"
+    },
+    "FIREBASE_SERVICE_ACCOUNT": {
+      "description": "Firebase Service Account JSON string for Heroku",
+      "required": false
+    }
+  }
+}

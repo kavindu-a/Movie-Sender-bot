@@ -1,0 +1,27 @@
+{
+  "name": "whatsapp-bot-server",
+  "version": "1.0.0",
+  "description": "Standalone Baileys WhatsApp Bot Server with MongoDB Session Persistence & Firebase Worker",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "latest",
+    "axios": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "firebase-admin": "latest",
+    "mongoose": "latest",
+    "pino": "latest",
+    "qrcode": "latest"
+  }
+}
+"
+  }
+}
