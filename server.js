@@ -744,6 +744,6 @@ app.get('*', (req, res) => {
     res.redirect(301, 'https://chama-movie-web-app.pages.dev/');
 });
 
-app.listen(PORT, () => {
-    console.log(`\n🚀 Chama WhatsApp Bot Admin Server running on: http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Chama WhatsApp Bot Admin Server running on port ${PORT}`);
 });
