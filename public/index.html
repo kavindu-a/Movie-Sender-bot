@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chama WA Bot Admin Server</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0a0c10;
+            --bg-card: rgba(18, 22, 31, 0.85);
+            --accent-green: #25D366;
+            --text-main: #f3f4f6;
+            --text-sub: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 20px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #ef4444; }
+        .dot.connected { background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .qr-box {
+            background: white;
+            padding: 16px;
+            border-radius: 16px;
+            width: 220px;
+            height: 220px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qr-box img { width: 100%; height: 100%; }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: var(--accent-green);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .pair-code-val {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--accent-green);
+            font-family: monospace;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1 style="font-size: 22px; font-weight: 800;">🤖 WhatsApp Bot Worker Manager</h1>
+                <p style="font-size: 12px; color: var(--text-sub);">Firebase Queue Auto Processor Server</p>
+            </div>
+            <div class="status-badge">
+                <span class="dot" id="dot"></span>
+                <span id="statusText">Checking...</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- QR Code Pairing Card -->
+            <div class="card" style="text-align: center;">
+                <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-qrcode"></i> Scan QR Code</h3>
+                <p style="font-size: 12px; color: var(--text-sub);">Scan with WhatsApp -> Linked Devices</p>
+
+                <div class="qr-box" id="qrBox">
+                    <p style="color: #666; font-size: 12px;">Loading QR Code...</p>
+                </div>
+
+                <p id="userPhoneDisplay" style="color: var(--accent-green); font-weight: 700; margin-bottom: 10px;"></p>
+                <button class="btn" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;" onclick="logoutWA()">Disconnect Bot</button>
+            </div>
+
+            <!-- Pairing Code Card -->
+            <div class="card">
+                <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-key"></i> 8-Digit Pairing Code</h3>
+                <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 20px;">Get pairing code for your WhatsApp Number</p>
+
+                <input type="text" class="form-input" id="pairPhone" placeholder="Phone Number (e.g. 94771234567)">
+                <button class="btn" onclick="getPairCode()">Generate Code</button>
+
+                <div class="pair-code-val" id="pairCodeVal" style="display: none;">---- ----</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function checkStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+
+                const dot = document.getElementById('dot');
+                const text = document.getElementById('statusText');
+                const qrBox = document.getElementById('qrBox');
+                const userPhoneDisplay = document.getElementById('userPhoneDisplay');
+
+                if (data.connected) {
+                    dot.classList.add('connected');
+                    text.innerText = `Connected (+${data.userNumber})`;
+                    qrBox.innerHTML = `<div style="color: var(--accent-green); font-weight: 700;"><i class="fa-solid fa-circle-check" style="font-size: 40px; margin-bottom: 10px;"></i><br>Bot Active</div>`;
+                    userPhoneDisplay.innerText = `Connected: +${data.userNumber}`;
+                } else {
+                    dot.classList.remove('connected');
+                    text.innerText = 'Disconnected';
+                    userPhoneDisplay.innerText = '';
+                    if (data.qrCode) {
+                        qrBox.innerHTML = `<img src="${data.qrCode}" alt="QR Code">`;
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function getPairCode() {
+            const phone = document.getElementById('pairPhone').value.trim();
+            if (!phone) return alert('Enter phone number!');
+
+            try {
+                const res = await fetch('/api/pair-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                const data = await res.json();
+                if (data.success && data.code) {
+                    const el = document.getElementById('pairCodeVal');
+                    el.style.display = 'block';
+                    el.innerText = data.code;
+                } else {
+                    alert('Error: ' + (data.error || 'Failed'));
+                }
+            } catch (e) {
+                alert('Failed to get pairing code');
+            }
+        }
+
+        async function logoutWA() {
+            if (confirm('Disconnect Bot?')) {
+                await fetch('/api/logout', { method: 'POST' });
+                checkStatus();
+            }
+        }
+
+        setInterval(checkStatus, 4000);
+        checkStatus();
+    </script>
+</body>
+</html>
